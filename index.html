@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fhumulani Bakery • Artisanal Excellence</title>
+
+  <!-- Bootstrap 5.3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --color-bg: #fdfaf5;
+      --color-text: #1a0f08;
+      --color-accent: #d4af37;
+      --color-accent-dark: #b8972e;
+      --color-cream: #fff8f0;
+      --radius: 16px;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: radial-gradient(circle at 30% 20%, rgba(212,175,55,0.08) 0%, transparent 50%),
+                  url('https://www.transparenttextures.com/patterns/flour.png') repeat,
+                  var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1300px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 5vw;
+    }
+
+    h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 500; text-align: center; }
+
+    /* Preloader */
+    #preloader {
+      position: fixed;
+      inset: 0;
+      background: var(--color-bg);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.8s ease;
+    }
+    #preloader.hidden { opacity: 0; pointer-events: none; }
+
+    .baker-loader {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      margin-bottom: 1.5rem;
+    }
+    .rolling-pin {
+      width: 140px;
+      height: 20px;
+      background: linear-gradient(90deg, #e0c188, #d4af37, #e0c188);
+      border-radius: 10px;
+      position: absolute;
+      top: 60px;
+      left: 0;
+      animation: roll 2.5s infinite linear;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .flour-particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0;
+      animation: dust 4s infinite;
+    }
+    .flour-particle:nth-child(1) { top: 30%; left: 20%; animation-delay: 0.2s; }
+    .flour-particle:nth-child(2) { top: 40%; left: 60%; animation-delay: 0.8s; }
+    .flour-particle:nth-child(3) { top: 70%; left: 35%; animation-delay: 1.4s; }
+    .flour-particle:nth-child(4) { top: 55%; left: 80%; animation-delay: 2.0s; }
+
+    @keyframes roll { 0% { transform: rotate(0deg) translateX(0); } 100% { transform: rotate(720deg) translateX(0); } }
+    @keyframes dust { 0% { opacity: 0; transform: translateY(0) scale(0.5); } 30% { opacity: 0.9; transform: translateY(-40px) scale(1.2); } 100% { opacity: 0; transform: translateY(-80px) scale(0.5); } }
+
+    #percent {
+      font-family: 'Playfair Display', serif;
+      font-size: 5rem;
+      font-weight: 700;
+      color: var(--color-accent-dark);
+    }
+
+    /* Hero – reliable Pexels image, strong overlay */
+    .hero {
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: rgba(208, 182, 97, 0.45);
+      background: linear-gradient(rgba(0,0,0,0.6), rgba(26,15,8,0.85)),
+                  url('./images/Fhumulani_Bakery_Display.png') center/cover no-repeat fixed;
+      background-attachment: fixed;
+      background-size: cover;
+      background-position: center;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.75) 100%);
+      z-index: 1;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 1100px;
+      width: 90%;
+      padding: 2rem 1rem;
+    }
+    .hero h1 {
+      font-size: clamp(5rem, 13vw, 14rem);
+      line-height: 0.88;
+      text-shadow: 0 12px 60px rgba(0,0,0,0.7);
+      margin-bottom: 0.3em;
+    }
+    .hero .subtitle {
+      font-size: clamp(1.5rem, 4.5vw, 2.6rem);
+      font-weight: 300;
+      opacity: 0.94;
+      margin: 0.4em 0 2.2em;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      padding: 1rem 2.8rem;
+      background: var(--color-accent);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1.2rem;
+      transition: all 0.4s ease;
+      box-shadow: 0 10px 30px rgba(212,175,55,0.35);
+    }
+    .btn-primary:hover {
+      background: var(--color-accent-dark);
+      transform: translateY(-5px);
+      box-shadow: 0 18px 45px rgba(184,151,46,0.45);
+    }
+
+    /* Floating pastries – up/down motion */
+    .floating {
+      position: absolute;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0;
+      animation: float-strong 16s infinite ease-in-out, drift 28s infinite ease-in-out, appear 2.5s forwards;
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.25));
+    }
+
+    @keyframes float-strong {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-140px) rotate(5deg); }
+    }
+
+    @keyframes drift {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(var(--drift-x, 60px)); }
+    }
+
+    @keyframes appear { to { opacity: 0.8; } }
+
+
+
+    @media (max-width: 900px) {
+      .floating { animation-duration: 12s, 22s; opacity: 0.7; }
+    }
+
+    /* Rest of sections */
+    section {
+      padding: 12vh 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    h2 {
+      font-size: clamp(3.5rem, 8vw, 7.5rem);
+      color: var(--color-accent-dark);
+      margin-bottom: 1.2em;
+    }
+
+    #inventory { background: #fffaf5; }
+    .inventory-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2.5rem;
+      margin-top: 4rem;
+      width: 100%;
+      max-width: 1200px;
+    }
+    .item-card {
+      background: white;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+      transition: all 0.4s ease;
+      text-align: center;
+    }
+    .item-card:hover { transform: translateY(-12px); box-shadow: 0 30px 70px rgba(0,0,0,0.15); }
+    .item-card img { width: 100%; height: 280px; object-fit: cover; transition: transform 0.6s ease; }
+    .item-card:hover img { transform: scale(1.06); }
+    .item-card h3 { font-size: 1.7rem; margin: 1.2rem 1rem 0.6rem; color: var(--color-accent-dark); }
+    .item-card p { padding: 0 1.5rem 1.8rem; font-size: 1.05rem; opacity: 0.85; }
+
+    #about { background: #fefcf8; }
+    .about-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 1000px;
+      margin: 0 auto 5rem;
+    }
+    .about-image {
+      width: 100%;
+      max-width: 800px;
+      margin-bottom: 3rem;
+    }
+    .about-image img {
+      width: 100%;
+      border-radius: var(--radius);
+      box-shadow: 0 25px 70px rgba(0,0,0,0.15);
+    }
+
+    .about-text {
+      font-size: 1.15rem;
+      line-height: 1.8;
+      opacity: 0.92;
+      text-align: center;
+      max-width: 900px;
+    }
+   .about-box {
+      background: var(--color-cream);
+      padding: 1.8rem;
+      border-radius: var(--radius);
+      margin: 2rem auto;
+      text-align: center;
+      border: 1px solid var(--color-accent);
+      max-width: 600px;
+    }
+
+    .address-box {
+      background: var(--color-cream);
+      padding: 1.8rem;
+      border-radius: var(--radius);
+      margin: 2rem auto;
+      text-align: center;
+      border: 1px solid var(--color-accent);
+      max-width: 600px;
+    }
+
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+      margin-top: 4rem;
+    }
+    .gallery img {
+      width: clamp(220px, 32%, 360px);
+      height: auto;
+      object-fit: cover;
+      border-radius: var(--radius);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+      transition: transform 0.5s ease;
+    }
+    .gallery img:hover { transform: translateY(-8px); }
+
+    #order { padding: 12vh 0; }
+    #custom-order {
+      background: var(--color-cream);
+      border-radius: var(--radius);
+      padding: 4rem 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+    }
+    #custom-order form { display: grid; gap: 1.6rem; max-width: 700px; margin: 0 auto; }
+    #custom-order input, #custom-order textarea, #custom-order select {
+      padding: 1.2rem;
+      border: 1px solid #ddd;
+      border-radius: var(--radius);
+      font-size: 1.1rem;
+      width: 100%;
+    }
+    #custom-order button {
+      padding: 1.2rem 3rem;
+      background: var(--color-accent);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 1rem auto 0;
+      display: block;
+    }
+
+    .whatsapp-float {
+      position: fixed;
+      bottom: 40px;
+      right: 40px;
+      z-index: 999;
+      width: 70px;
+      height: 70px;
+      background: #25D366;
+      border-radius: 50%;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .whatsapp-float:hover { transform: scale(1.12); }
+
+    footer {
+      background: var(--color-text);
+      color: white;
+      text-align: center;
+      padding: 3rem 0;
+      font-size: 0.95rem;
+      width: 100%;
+      margin-top: auto;
+    }
+
+    /* Scroll reveal */
+    section, .item-card, .about-content, h2 {
+      opacity: 0;
+      transform: translateY(60px);
+      transition: all 1.1s cubic-bezier(0.22,1,0.36,1);
+    }
+    .in-view { opacity: 1; transform: none; }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 6.5rem; }
+      .hero .subtitle { font-size: 1.8rem; }
+      .whatsapp-float { bottom: 25px; right: 25px; width: 60px; height: 60px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Pre-loader -->
+  <div id="preloader">
+    <div class="baker-loader">
+      <div class="rolling-pin"></div>
+      <div class="flour-particle"></div>
+      <div class="flour-particle"></div>
+      <div class="flour-particle"></div>
+      <div class="flour-particle"></div>
+    </div>
+    <div id="percent">0</div>
+  </div>
+
+  <!-- WhatsApp Float -->
+  <a href="https://wa.me/27792640142?text=Hi%20Fhumulani%20Bakery!%20I'd%20like%20to%20place%20an%20order..." 
+     target="_blank" class="whatsapp-float">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width="45">
+  </a>
+
+  <!-- Hero -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <h1>Fhumulani Bakery</h1>
+      <div class="subtitle">Welcome to Fhumulani Bakery <br> where every bite feels like treasure. <br> • Since 2018</div>
+      <a href="#inventory" class="btn btn-primary">Explore Our Signature Range</a>
+    </div>
+
+<p><strong></strong></p>
+  </section>
+
+  <!-- Inventory -->
+  <section id="inventory">
+    <div class="container">
+      <h2>Our Signature Inventory</h2>
+      <p style="text-align:center; max-width:900px; margin:0 auto 4rem; font-size:1.2rem; opacity:0.9;">
+        Freshly baked daily in Johannesburg — from moist carrot & banana cakes to traditional rusks, scones, steamed dumplings, African fat cooks and fluffy muffins.
+      </p>
+
+      <div class="inventory-grid">
+        <div class="item-card">
+          <img src="./images/carrotcake.png" alt="Carrot Cake">
+          <h3>Carrot Cake</h3>
+          <p>Moist & spiced • Cream cheese frosting • Also available in banana flavour</p>
+        </div>
+
+        <div class="item-card">
+          <img src="./images/Fhumulani_Bakery_Rusks.jpeg" alt="Rusks">
+          <h3>Rusks</h3>
+          <p>Buttermilk • Muesli • Wholewheat • Perfect with coffee or tea</p>
+        </div>
+
+        <div class="item-card">
+          <img src="./images/Fhumulani_Bakery_ClassicScones.jpeg" alt="Scones">
+          <h3>Classics Golden Scones</h3>
+          <p>Light & fluffy • Plain, cheese, fruit • Served with jam & cream</p>
+        </div>
+
+        <div class="item-card">
+          <img src="./images/Fhumulani_Bakery_Dumpling.png" alt="Steamed Dumplings">
+          <h3>Steamed Dumplings</h3>
+          <p>Soft & savoury • Carrot or parsley filling • Traditional style</p>
+        </div>
+
+        <div class="item-card">
+          <img src="./images/Fhumulani_Bakery_Magwinya.png" alt="African Magwinya | Vetkoek">
+          <h3>African Magwinya | Vetkoek</h3>
+          <p>Crispy outside, soft inside • Plain or filled • Classic South African treat</p>
+        </div>
+
+                <div class="item-card">
+          <img src="./images/Fhumulani_Bakery_celebration_cake.jpg" alt="Celebration & Wedding Cakes">
+          <h3>Celebration & Wedding Cakes</h3>
+            <p>Bespoke designs • Edible art • Multi-tier options available</p>
+        </div>
+
+                <div class="item-card">
+          <img src="./images/Fhumulani_Bakery_Birthday_Cake.jpeg" alt="Custom Birthday Cakes">
+          <h3>Custom Birthday Cakes</h3>
+            <p>Hand-decorated • Any flavour, design, or size • For celebrations big & small</p>
+        </div>
+
+
+        <div class="item-card">
+          <img src="./images/Fhumulani_Bakery_Muffins.png" alt="Muffins">
+          <h3>Muffins</h3>
+          <p>Blueberry • Chocolate • Vanilla • Freshly baked every morning</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about">
+    <div class="container">
+      <h2>About Fhumulani Bakery</h2>
+
+      <div class="about-content">
+        <div class="about-image">
+          <img src="./images/Fhumulani Bakery About.png" alt="Our passionate baker at work">
+        </div>
+
+        <div class="about-text">
+          <p>At Fhumulani Bakery, every creation is a celebration of craftsmanship, tradition, and pure indulgence. Founded in the heart of Johannesburg in 2018, we set out to bring timeless European pastry artistry to Gauteng — using only the finest ingredients, slow fermentation techniques, and unwavering attention to detail.</p>
+
+          <p>Our bakers rise before dawn to hand-laminate buttery croissants, craft velvety custards with Madagascar vanilla, and sculpt delicate tarts that balance bright citrus with silky smoothness. We source premium local and imported elements — Valrhona chocolate, organic flours, fresh seasonal fruits — because true luxury begins with what you can't see.</p>
+
+          <ul class="values-list">
+            <li>Handcrafted daily with love and precision</li>
+            <li>Sustainable and ethical sourcing wherever possible</li>
+            <li>Custom artistry for life's special moments</li>
+            <li>Passion for quality in every layer and bite</li>
+          </ul>
+
+          <p>More than a bakery, Fhumulani Bakery is a place where moments become memories: morning coffees with family, afternoon treats for colleagues, custom cakes for life's milestones. We're proud to be part of Johannesburg's vibrant food scene, serving our community with warmth, quality, and a touch of everyday elegance.</p>
+
+          <div class="address-box">
+            <h4>Our Location</h4>
+            <p>7755 Seychelles Ave, Cosmo City, Johannesburg, Gauteng</p>
+            <p>Open Mon-Sat 7am-6pm, Sun 8am-4pm</p>
+          </div>
+
+          
+        </div>
+      </div>
+
+      <div class="gallery">
+        <img src="./images/Fhumulani_Bakery_Magwinya.png" alt="Bakery interior display">
+        <img src="./images/carrotcake.png" alt="Artisanal treats">
+        <img src="./images/Fhumulani_Bakery_Dumpling.png" alt="Custom cake">
+      </div>
+    </div>
+  </section>
+
+  <!-- Order -->
+  <section id="order">
+    <div class="container">
+      <h2>Place an Order</h2>
+
+      <div id="custom-order">
+        <h3>Custom Order Form</h3>
+        <form action="https://formspree.io/f/preciousm0142@gmail.com" method="POST">
+          <input type="text" name="name" placeholder="Your Name *" required>
+          <input type="tel" name="phone" placeholder="Phone Number *" required>
+          <textarea name="details" rows="5" placeholder="Order Details (e.g., 12 rusks, carrot cake...)" required></textarea>
+          <button type="submit">Submit Order</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© <script>document.write(new Date().getFullYear());</script> Fhumulani Bakery. All rights reserved.</p>
+    <p>Developed with ❤️ by <a href="https://github.com/nwtnr">Thendo</a></p>
+  </footer>
+
+  <script>
+    // Pre-loader
+    const preloader = document.getElementById('preloader');
+    const percent = document.getElementById('percent');
+    let count = 0;
+
+    const interval = setInterval(() => {
+      count += Math.floor(Math.random() * 4) + 2;
+      if (count > 100) count = 100;
+      percent.textContent = count;
+      if (count >= 100) {
+        clearInterval(interval);
+        preloader.classList.add('hidden');
+        setTimeout(() => preloader.style.display = 'none', 1000);
+      }
+    }, 40);
+
+    // Scroll reveal
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('in-view');
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('section, .item-card, .about-content, h2').forEach(el => observer.observe(el));
+  </script>
+
+  <style>
+    section, .item-card, .about-content, h2 {
+      opacity: 0;
+      transform: translateY(60px);
+      transition: all 1.1s cubic-bezier(0.22,1,0.36,1);
+    }
+    .in-view { opacity: 1; transform: none; }
+  </style>
+
+</body>
+</html>
